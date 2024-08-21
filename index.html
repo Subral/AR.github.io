@@ -1,4 +1,3 @@
-
 <!-- 
 <!DOCTYPE html>
 <html>
@@ -97,7 +96,7 @@
         <a-text value="This content will always face you."
             look-at="[gps-camera]"
             scale="10 10 10"
-            gps-entity-place="latitude: <26.8756>; longitude: <80.9115>;"></a-text>
+            gps-entity-place="latitude: 26.8756; longitude:80.9115;"></a-text>
         <a-camera gps-camera
             id="gps-camera"
             gps-camera-components
@@ -110,36 +109,36 @@
     </a-scene>
 
     <script>
-        // Get the GPS camera element
-        var gpsCameraEl = document.getElementById('gps-camera');
+        // // Get the GPS camera element
+        // var gpsCameraEl = document.getElementById('gps-camera');
 
-        // Add an event listener to the gps-camera component
-        gpsCameraEl.addEventListener('gps-camera-update-position', function (event) {
-            // Get the current latitude and longitude
-            var latitude = event.detail.position.latitude.toFixed(2);
-            var longitude = event.detail.position.longitude.toFixed(2);
+        // // Add an event listener to the gps-camera component
+        // gpsCameraEl.addEventListener('gps-camera-update-position', function (event) {
+        //     // Get the current latitude and longitude
+        //     var latitude = event.detail.position.latitude.toFixed(2);
+        //     var longitude = event.detail.position.longitude.toFixed(2);
 
-            // Update the coordinates display text
-            var coordinatesDisplayEl = document.getElementById('coordinates-display');
-            coordinatesDisplayEl.setAttribute('text', `value: Latitude: ${latitude}, Longitude: ${longitude}; color: white; align: center; width: 3; wrapCount: 20`);
-        });
+        //     // Update the coordinates display text
+        //     var coordinatesDisplayEl = document.getElementById('coordinates-display');
+        //     coordinatesDisplayEl.setAttribute('text', `value: Latitude: ${latitude}, Longitude: ${longitude}; color: white; align: center; width: 3; wrapCount: 20`);
+        // });
 
-        // Add a touch event listener to the a-scene
-        var scene = document.querySelector('a-scene');
-        scene.addEventListener('gps-new-entity-placed', function (event) {
-            // Get the latitude and longitude of the placed entity
-            var tappedLatitude = event.detail.position.latitude.toFixed(2);
-            var tappedLongitude = event.detail.position.longitude.toFixed(2);
+        // // Add a touch event listener to the a-scene
+        // var scene = document.querySelector('a-scene');
+        // scene.addEventListener('gps-new-entity-placed', function (event) {
+        //     // Get the latitude and longitude of the placed entity
+        //     var tappedLatitude = event.detail.position.latitude.toFixed(2);
+        //     var tappedLongitude = event.detail.position.longitude.toFixed(2);
 
-            // Create a new a-text element at the placed position
-            var tappedText = document.createElement('a-text');
-            tappedText.setAttribute('gps-entity-place', `latitude: ${tappedLatitude}; longitude: ${tappedLongitude};`);
-            tappedText.setAttribute('rotation', '0 0 0');
-            tappedText.setAttribute('scale', '10 10 10');
-            tappedText.setAttribute('color', 'white');
-            tappedText.setAttribute('value', `Latitude: ${tappedLatitude}, Longitude: ${tappedLongitude}`);
-            scene.appendChild(tappedText);
-        });
+        //     // Create a new a-text element at the placed position
+        //     var tappedText = document.createElement('a-text');
+        //     tappedText.setAttribute('gps-entity-place', `latitude: ${tappedLatitude}; longitude: ${tappedLongitude};`);
+        //     tappedText.setAttribute('rotation', '0 0 0');
+        //     tappedText.setAttribute('scale', '10 10 10');
+        //     tappedText.setAttribute('color', 'white');
+        //     tappedText.setAttribute('value', `Latitude: ${tappedLatitude}, Longitude: ${tappedLongitude}`);
+        //     scene.appendChild(tappedText);
+        // });
     </script>
 </body>
 
