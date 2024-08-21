@@ -5,6 +5,8 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible"
         content="IE=edge" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Location-based AR.js</title>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
@@ -17,15 +19,17 @@
         arjs="sourceType: webcam; debugUIEnabled: false;">
         <a-text value="This content will always face you."
             look-at="[gps-camera]"
-            scale="50 50 50"
+            scale="10 10 10"
             gps-entity-place="latitude: <26.8756>; longitude: <80.9115>;"></a-text>
         <a-camera gps-camera
-            id="coordinates-display"
-            position="0 0.5 0"
-            text="value: Latitude: 0.00, Longitude: 0.00; color: white; align: center; width: 3; wrapCount: 20"
-            rotation-reader> </a-camera>
+            id="gps-camera"
+            position="0 1.6 0"
+            rotation-reader>
+            <a-entity id="coordinates-display"
+                position="0 0.5 0"
+                text="value: Latitude: 0.00, Longitude: 0.00; color: white; align: center; width: 3; wrapCount: 20"></a-entity>
+        </a-camera>
     </a-scene>
-
 
     <script>
         // Get the GPS camera element
@@ -41,10 +45,34 @@
             var coordinatesDisplayEl = document.getElementById('coordinates-display');
             coordinatesDisplayEl.setAttribute('text', `value: Latitude: ${latitude}, Longitude: ${longitude}; color: white; align: center; width: 3; wrapCount: 20`);
         });
+
+        // Add a touch event listener to the a-scene
+        var scene = document.querySelector('a-scene');
+        scene.addEventListener('touchend', function (event) {
+            // Use the arjs-hit-test component to get the touched position
+            var hitTestResults = event.detail.intersections;
+            if (hitTestResults.length > 0) {
+                var touchedPosition = hitTestResults[0].point;
+
+                // Get the latitude and longitude of the touched position
+                var tappedLatitude = touchedPosition.x.toFixed(2);
+                var tappedLongitude = touchedPosition.z.toFixed(2);
+
+                // Create a new a-text element at the touched position
+                var tappedText = document.createElement('a-text');
+                tappedText.setAttribute('position', `${tappedLatitude} 1.6 ${tappedLongitude}`);
+                tappedText.setAttribute('rotation', '0 0 0');
+                tappedText.setAttribute('scale', '10 10 10');
+                tappedText.setAttribute('color', 'white');
+                tappedText.setAttribute('value', `Latitude: ${tappedLatitude}, Longitude: ${tappedLongitude}`);
+                scene.appendChild(tappedText);
+            }
+        });
     </script>
 </body>
 
 </html> -->
+
 
 
 <!DOCTYPE html>
