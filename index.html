@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible"
+        content="IE=edge" />
+    <title>Location-based AR.js</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+</head>
+
+<body style="margin: 0; overflow: hidden;">
+    <a-scene vr-mode-ui="enabled: false"
+        embedded
+        arjs="sourceType: webcam; debugUIEnabled: false;">
+        <a-text value="This content will always face you."
+            look-at="[gps-camera]"
+            scale="50 50 50"
+            gps-entity-place="latitude: <26.8756>; longitude: <80.9115>;"></a-text>
+        <a-camera gps-camera
+            id="coordinates-display"
+            position="0 0.5 0"
+            text="value: Latitude: 0.00, Longitude: 0.00; color: white; align: center; width: 3; wrapCount: 20"
+            rotation-reader> </a-camera>
+    </a-scene>
+
+
+    <script>
+        // Get the GPS camera element
+        var gpsCameraEl = document.getElementById('gps-camera');
+
+        // Add an event listener to the gps-camera component
+        gpsCameraEl.addEventListener('gps-camera-update-position', function (event) {
+            // Get the current latitude and longitude
+            var latitude = event.detail.position.latitude.toFixed(2);
+            var longitude = event.detail.position.longitude.toFixed(2);
+
+            // Update the coordinates display text
+            var coordinatesDisplayEl = document.getElementById('coordinates-display');
+            coordinatesDisplayEl.setAttribute('text', `value: Latitude: ${latitude}, Longitude: ${longitude}; color: white; align: center; width: 3; wrapCount: 20`);
+        });
+    </script>
+</body>
+
+</html>
