@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <meta charset='utf-8'>
@@ -18,8 +18,54 @@
 		embedded
         arjs='sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;'>
 
-        <a-entity gltf-model="./magnemite/scene.gltf" rotation="0 180 0" scale="0.15 0.15 0.15" gps-entity-place="longitude: 26.8533712; latitude: 80.9480505;" animation-mixer/>
+        <a-entity gltf-model="magnemite/scene.gltf" rotation="0 180 0" scale="0.05 0.05 0.05" gps-entity-place="longitude: 26.8533712; latitude: 80.9480505;" animation-mixer/>
         
-        <a-camera gps-camera rotation-reader></a-camera>
+        <a-camera gps-camera  rotation-reader></a-camera>
 	</a-scene>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<a-scene embedded arjs>
+    <!-- Camera -->
+    <a-camera></a-camera>
+  
+    <!-- Raycaster for detecting surfaces -->
+    <a-entity id="raycaster" raycaster="objects: .clickable" cursor="fuse: false"></a-entity>
+  
+    <!-- Box that will be rendered -->
+    <a-box id="box" position="0 0 0" scale="1 1 1" visible="false"></a-box>
+  </a-scene>
+  
+  <script>
+    const box = document.getElementById('box');
+    const raycaster = document.getElementById('raycaster');
+  
+    // Add click event listener
+    raycaster.addEventListener('click', (event) => {
+      const intersection = event.detail.intersection;
+      if (intersection) {
+        const point = intersection.point;
+        const distance = point.distanceTo(raycaster.getAttribute('position'));
+  
+        // Scale the box based on the distance
+        const scale = 1 / distance;
+        box.setAttribute('scale', `${scale} ${scale} ${scale}`);
+        
+        // Set position and make it visible
+        box.setAttribute('position', `${point.x} ${point.y} ${point.z}`);
+        box.setAttribute('visible', 'true');
+      }
+    });
+  </script>
+  
+</body>
+</html>
