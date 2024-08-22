@@ -1,71 +1,53 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>GeoAR.js demo</title>
-    <script src='https://aframe.io/releases/0.9.2/aframe.min.js'></script>
-    <script src="https://raw.githack.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.min.js"></script>
-    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
-    <script>
-        THREEx.ArToolkitContext.baseURL = 'https://raw.githack.com/jeromeetienne/ar.js/master/three.js/'
-    </script>
-</head>
-
-<body style='margin: 0; overflow: hidden;'>
-    <a-scene
-        vr-mode-ui="enabled: false"
-		embedded
-        arjs='sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;'>
-
-        <a-entity gltf-model="magnemite/scene.gltf" rotation="0 180 0" scale="0.05 0.05 0.05" gps-entity-place="longitude: 26.8533712; latitude: 80.9480505;" animation-mixer/>
-        
-        <a-camera gps-camera  rotation-reader></a-camera>
-	</a-scene>
-</body>
-</html> -->
-
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-<a-scene embedded arjs>
-    <!-- Camera -->
-    <a-camera></a-camera>
-  
-    <!-- Raycaster for detecting surfaces -->
-    <a-entity id="raycaster" raycaster="objects: .clickable" cursor="fuse: false"></a-entity>
-  
-    <!-- Box that will be rendered -->
-    <a-box id="box" position="0 0 0" scale="1 1 1" visible="false"></a-box>
-  </a-scene>
-  
-  <script>
-    const box = document.getElementById('box');
-    const raycaster = document.getElementById('raycaster');
-  
-    // Add click event listener
-    raycaster.addEventListener('click', (event) => {
-      const intersection = event.detail.intersection;
-      if (intersection) {
-        const point = intersection.point;
-        const distance = point.distanceTo(raycaster.getAttribute('position'));
-  
-        // Scale the box based on the distance
-        const scale = 1 / distance;
-        box.setAttribute('scale', `${scale} ${scale} ${scale}`);
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script>
+      AFRAME.registerComponent('tap-to-place', {
+        init: function () {
+          const sceneEl = this.el.sceneEl;
+          sceneEl.addEventListener('click', (event) => {
+            const touchPoint = event.detail.intersection.point;
+            this.placeBox(touchPoint);
+          });
+        },
         
-        // Set position and make it visible
-        box.setAttribute('position', `${point.x} ${point.y} ${point.z}`);
-        box.setAttribute('visible', 'true');
-      }
-    });
-  </script>
-  
-</body>
+        placeBox: function (position) {
+          const box = document.createElement('a-box');
+          box.setAttribute('position', position);
+          box.setAttribute('color', 'red');
+          
+          // Calculate size based on distance
+          const camera = document.querySelector('a-camera');
+          const distance = this.getDistance(camera.object3D.position, position);
+          const size = this.calculateSize(distance);
+          
+          box.setAttribute('width', size);
+          box.setAttribute('height', size);
+          box.setAttribute('depth', size);
+          
+          this.el.sceneEl.appendChild(box);
+        },
+        
+        getDistance: function (p1, p2) {
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dz = p1.z - p2.z;
+          return Math.sqrt(dx * dx + dy * dy + dz * dz);
+        },
+        
+        calculateSize: function (distance) {
+          // Adjust this formula as needed
+          return Math.max(0.1, Math.min(1, distance * 0.1));
+        }
+      });
+    </script>
+  </head>
+  <body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+      <a-camera tap-to-place ></a-camera>
+      <a-entity id="ar-model" gps-entity-place gltf-model="magnemite/scene.gltf" rotation="0 180 0" animation-mixer scale="0.15 0.15 0.15"></a-entity>
+    </a-scene>
+  </body>
 </html>
